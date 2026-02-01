@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import './CustomSelect.css';
 
 interface Option {
@@ -14,15 +15,9 @@ interface CustomSelectProps {
     className?: string;
 }
 
-interface DropdownPosition {
-    top: number;
-    left: number;
-    width: number;
-}
-
 export function CustomSelect({ options, value, onChange, className = '' }: CustomSelectProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const [position, setPosition] = useState<DropdownPosition | null>(null);
+    const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
     const selectRef = useRef<HTMLDivElement>(null);
     const triggerRef = useRef<HTMLButtonElement>(null);
     const dropdownRef = useRef<HTMLUListElement>(null);
@@ -34,10 +29,11 @@ export function CustomSelect({ options, value, onChange, className = '' }: Custo
     const updatePosition = useCallback(() => {
         if (triggerRef.current) {
             const rect = triggerRef.current.getBoundingClientRect();
-            setPosition({
-                top: rect.bottom + 6,
-                left: rect.left,
-                width: rect.width,
+            setDropdownStyle({
+                position: 'fixed',
+                top: `${rect.bottom + 6}px`,
+                left: `${rect.left}px`,
+                width: `${rect.width}px`,
             });
         }
     }, []);
@@ -45,16 +41,20 @@ export function CustomSelect({ options, value, onChange, className = '' }: Custo
     // 외부 클릭 시 닫기
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
+            const target = event.target as Node;
+            if (selectRef.current && !selectRef.current.contains(target) &&
+                dropdownRef.current && !dropdownRef.current.contains(target)) {
                 setIsOpen(false);
             }
         };
 
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, [isOpen]);
 
-    // 열릴 때 위치 계산 및 스크롤 시 위치 업데이트
+    // 열릴 때 위치 계산
     useEffect(() => {
         if (isOpen) {
             updatePosition();
@@ -75,22 +75,6 @@ export function CustomSelect({ options, value, onChange, className = '' }: Custo
         }
     }, [isOpen, selectedIndex]);
 
-    // 스크롤 이벤트가 부모로 전파되지 않도록
-    const handleWheel = useCallback((e: React.WheelEvent) => {
-        const dropdown = dropdownRef.current;
-        if (!dropdown) return;
-
-        const { scrollTop, scrollHeight, clientHeight } = dropdown;
-        const isScrollingUp = e.deltaY < 0;
-        const isScrollingDown = e.deltaY > 0;
-
-        if ((isScrollingUp && scrollTop <= 0) ||
-            (isScrollingDown && scrollTop + clientHeight >= scrollHeight)) {
-            e.preventDefault();
-        }
-        e.stopPropagation();
-    }, []);
-
     const handleSelect = (optionValue: string) => {
         onChange(optionValue);
         setIsOpen(false);
@@ -102,6 +86,31 @@ export function CustomSelect({ options, value, onChange, className = '' }: Custo
         }
         setIsOpen(!isOpen);
     };
+
+    // 드롭다운을 Portal로 body에 렌더링
+    const dropdown = isOpen ? createPortal(
+        <ul
+            className="custom-select-dropdown"
+            role="listbox"
+            ref={dropdownRef}
+            style={dropdownStyle}
+        >
+            {options.map((option) => (
+                <li
+                    key={option.value}
+                    className={`custom-select-option ${option.value === value ? 'selected' : ''}`}
+                    onClick={() => handleSelect(option.value)}
+                    role="option"
+                    aria-selected={option.value === value}
+                >
+                    {option.emoji && <span className="option-emoji">{option.emoji}</span>}
+                    <span className="option-label">{option.label}</span>
+                    {option.value === value && <span className="option-check">✓</span>}
+                </li>
+            ))}
+        </ul>,
+        document.body
+    ) : null;
 
     return (
         <div className={`custom-select ${className} ${isOpen ? 'open' : ''}`} ref={selectRef}>
@@ -119,35 +128,7 @@ export function CustomSelect({ options, value, onChange, className = '' }: Custo
                 </span>
                 <span className={`custom-select-arrow ${isOpen ? 'rotate' : ''}`}>▾</span>
             </button>
-
-            {isOpen && position && (
-                <ul
-                    className="custom-select-dropdown"
-                    role="listbox"
-                    ref={dropdownRef}
-                    onWheel={handleWheel}
-                    style={{
-                        position: 'fixed',
-                        top: position.top,
-                        left: position.left,
-                        width: position.width,
-                    }}
-                >
-                    {options.map((option) => (
-                        <li
-                            key={option.value}
-                            className={`custom-select-option ${option.value === value ? 'selected' : ''}`}
-                            onClick={() => handleSelect(option.value)}
-                            role="option"
-                            aria-selected={option.value === value}
-                        >
-                            {option.emoji && <span className="option-emoji">{option.emoji}</span>}
-                            <span className="option-label">{option.label}</span>
-                            {option.value === value && <span className="option-check">✓</span>}
-                        </li>
-                    ))}
-                </ul>
-            )}
+            {dropdown}
         </div>
     );
 }
