@@ -56,7 +56,7 @@ function App() {
         <div className="app animate-fadeIn">
             <header className="app-header">
                 <div className="title-wrapper">
-                    <img src="/Fermentation.png" alt="Logo" className="app-logo" />
+                    <img src="/Fermentation_logo.png" alt="Logo" className="app-logo" />
                     <h1 className="app-title">빵 발효 타이머</h1>
                 </div>
                 <p className="app-subtitle">완벽한 발효를 위한 당신의 파트너</p>
