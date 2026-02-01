@@ -1,0 +1,245 @@
+.preset-editor {
+    width: 100%;
+}
+
+.editor-header h2 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: var(--space-lg);
+}
+
+.editor-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.input-text {
+    width: 100%;
+    padding: var(--space-md);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color var(--transition-normal);
+}
+
+.input-text:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.input-text::placeholder {
+    color: var(--text-muted);
+}
+
+/* 단계 섹션 */
+.stages-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.stages-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stages-header span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.btn-add-stage {
+    padding: var(--space-xs) var(--space-md);
+    background: rgba(124, 179, 66, 0.2);
+    border: 1px solid var(--color-success);
+    border-radius: var(--radius-full);
+    color: var(--color-success);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.btn-add-stage:hover {
+    background: rgba(124, 179, 66, 0.3);
+}
+
+/* 단계 목록 */
+.stages-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.stage-edit-item {
+    display: grid;
+    grid-template-columns: 30px 1fr 100px 1fr 32px;
+    gap: var(--space-sm);
+    align-items: center;
+    padding: var(--space-sm);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+}
+
+.stage-number {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary);
+    color: #1a1512;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.input-select {
+    padding: var(--space-sm);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.input-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.time-input-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.input-number {
+    width: 60px;
+    padding: var(--space-sm);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-family: inherit;
+    text-align: center;
+}
+
+.input-number:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.time-unit {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.input-description {
+    padding: var(--space-sm);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.8rem;
+    font-family: inherit;
+}
+
+.input-description:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.input-description::placeholder {
+    color: var(--text-muted);
+}
+
+.btn-remove-stage {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(239, 83, 80, 0.2);
+    border: 1px solid var(--color-danger);
+    border-radius: 50%;
+    color: var(--color-danger);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.btn-remove-stage:hover:not(:disabled) {
+    background: rgba(239, 83, 80, 0.3);
+}
+
+.btn-remove-stage:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* 액션 버튼 */
+.editor-actions {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    margin-top: var(--space-lg);
+}
+
+.editor-actions .btn {
+    min-width: 120px;
+}
+
+/* 반응형 */
+@media (max-width: 600px) {
+    .stage-edit-item {
+        grid-template-columns: 24px 1fr 1fr 28px;
+        grid-template-rows: auto auto;
+        gap: var(--space-xs);
+    }
+
+    .stage-number {
+        grid-row: span 2;
+    }
+
+    .input-select {
+        grid-column: 2;
+    }
+
+    .time-input-group {
+        grid-column: 3;
+    }
+
+    .input-description {
+        grid-column: 2 / 4;
+    }
+
+    .btn-remove-stage {
+        grid-row: span 2;
+    }
+}
