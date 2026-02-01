@@ -101,7 +101,6 @@ body {
     padding: var(--space-xl);
     width: 100%;
     max-width: 100%;
-    overflow: hidden;
 }
 
 /* ===== 버튼 스타일 ===== */
