@@ -1,20 +1,26 @@
-import { useState } from 'react';
-import { TimerDisplay, Controls } from './components/Timer';
+import { useState, useEffect } from 'react';
+import { TimerDisplay, Controls, StageProgress } from './components/Timer';
 import { BreadSelector } from './components/BreadSelector';
-import { useTimer } from './hooks/useTimer';
-import { breadPresets, type BreadPreset } from './data/presets';
+import { useMultiStageTimer } from './hooks/useTimer';
+import { breadPresets, getTotalTime, type BreadPreset } from './data/presets';
 import './App.css';
 
 function App() {
     const [selectedBread, setSelectedBread] = useState<BreadPreset>(breadPresets[0]);
-    const timer = useTimer(selectedBread.defaultTimeMinutes);
+    const timer = useMultiStageTimer(selectedBread.stages);
+
+    // 빵 선택 시 타이머 단계 업데이트
+    useEffect(() => {
+        timer.setStages(selectedBread.stages);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedBread]);
 
     const handleBreadSelect = (preset: BreadPreset) => {
         setSelectedBread(preset);
-        timer.setMinutes(preset.defaultTimeMinutes);
     };
 
     const isTimerActive = timer.status === 'running' || timer.status === 'paused';
+    const totalMinutes = getTotalTime(selectedBread.stages);
 
     return (
         <div className="app animate-fadeIn">
@@ -26,13 +32,23 @@ function App() {
             <main className="glass-card">
                 <div className="selected-bread">
                     <span className="selected-emoji">{selectedBread.emoji}</span>
-                    <span className="selected-name">{selectedBread.name}</span>
+                    <div className="selected-info">
+                        <span className="selected-name">{selectedBread.name}</span>
+                        <span className="selected-total">총 {totalMinutes}분 · {selectedBread.stages.length}단계</span>
+                    </div>
                 </div>
+
+                <StageProgress
+                    stages={selectedBread.stages}
+                    currentStageIndex={timer.currentStageIndex}
+                    status={timer.status}
+                />
 
                 <TimerDisplay
                     timeLeft={timer.timeLeft}
-                    progress={timer.progress}
+                    progress={timer.stageProgress}
                     status={timer.status}
+                    currentStage={timer.currentStage}
                 />
 
                 <Controls
@@ -40,7 +56,10 @@ function App() {
                     onStart={timer.start}
                     onPause={timer.pause}
                     onResume={timer.resume}
-                    onReset={timer.reset}
+                    onResetStage={timer.resetStage}
+                    onResetAll={timer.resetAll}
+                    onNextStage={timer.nextStage}
+                    hasNextStage={timer.currentStageIndex < timer.totalStages - 1}
                 />
 
                 <BreadSelector
@@ -52,7 +71,7 @@ function App() {
             </main>
 
             <footer className="app-footer">
-                <p>발효 중엔 따뜻하고 습한 곳에 반죽을 두세요 🌡️</p>
+                <p>💡 단계가 끝나면 알림이 울리고 다음 단계로 진행할 수 있어요!</p>
             </footer>
         </div>
     );

@@ -1,49 +1,62 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import type { FermentationStage } from '../data/presets';
 
-export type TimerStatus = 'idle' | 'running' | 'paused' | 'completed';
+export type TimerStatus = 'idle' | 'running' | 'paused' | 'stageComplete' | 'allComplete';
 
-interface UseTimerReturn {
+interface UseMultiStageTimerReturn {
+    /** 현재 단계 인덱스 */
+    currentStageIndex: number;
+    /** 현재 단계 정보 */
+    currentStage: FermentationStage | null;
     /** 남은 시간 (초) */
     timeLeft: number;
-    /** 전체 시간 (초) */
-    totalTime: number;
+    /** 현재 단계 전체 시간 (초) */
+    stageTime: number;
     /** 타이머 상태 */
     status: TimerStatus;
-    /** 진행률 (0~1) */
-    progress: number;
+    /** 현재 단계 진행률 (0~1) */
+    stageProgress: number;
+    /** 전체 진행률 (0~1) */
+    totalProgress: number;
+    /** 완료된 단계 수 */
+    completedStages: number;
+    /** 전체 단계 수 */
+    totalStages: number;
     /** 타이머 시작 */
     start: () => void;
     /** 타이머 일시정지 */
     pause: () => void;
     /** 타이머 재개 */
     resume: () => void;
-    /** 타이머 리셋 */
-    reset: () => void;
-    /** 시간 설정 (분 단위) */
-    setMinutes: (minutes: number) => void;
+    /** 현재 단계 리셋 */
+    resetStage: () => void;
+    /** 전체 리셋 */
+    resetAll: () => void;
+    /** 다음 단계로 진행 */
+    nextStage: () => void;
+    /** 단계 설정 */
+    setStages: (stages: FermentationStage[]) => void;
 }
 
-export function useTimer(initialMinutes: number = 60): UseTimerReturn {
-    const [totalTime, setTotalTime] = useState(initialMinutes * 60);
-    const [timeLeft, setTimeLeft] = useState(initialMinutes * 60);
+export function useMultiStageTimer(initialStages: FermentationStage[] = []): UseMultiStageTimerReturn {
+    const [stages, setStagesState] = useState<FermentationStage[]>(initialStages);
+    const [currentStageIndex, setCurrentStageIndex] = useState(0);
+    const [timeLeft, setTimeLeft] = useState(0);
     const [status, setStatus] = useState<TimerStatus>('idle');
     const intervalRef = useRef<number | null>(null);
-    const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    // 알림 소리 초기화
+    const currentStage = stages[currentStageIndex] || null;
+    const stageTime = currentStage ? currentStage.durationMinutes * 60 : 0;
+
+    // 초기화
     useEffect(() => {
-        // 브라우저 내장 비프음 사용 (Web Audio API)
-        audioRef.current = null;
-        return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
-        };
-    }, []);
+        if (stages.length > 0 && status === 'idle') {
+            setTimeLeft(stages[0].durationMinutes * 60);
+        }
+    }, [stages, status]);
 
-    // 타이머 완료 알림
-    const playNotification = useCallback(() => {
-        // Web Audio API로 비프음 생성
+    // 알림
+    const playNotification = useCallback((message: string) => {
         try {
             const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
             const oscillator = audioContext.createOscillator();
@@ -52,43 +65,43 @@ export function useTimer(initialMinutes: number = 60): UseTimerReturn {
             oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
 
-            oscillator.frequency.value = 800;
+            oscillator.frequency.value = 880;
             oscillator.type = 'sine';
             gainNode.gain.value = 0.3;
 
             oscillator.start();
-
-            // 비프음 패턴: 3번 울림
-            setTimeout(() => gainNode.gain.value = 0, 200);
-            setTimeout(() => gainNode.gain.value = 0.3, 400);
-            setTimeout(() => gainNode.gain.value = 0, 600);
-            setTimeout(() => gainNode.gain.value = 0.3, 800);
-            setTimeout(() => gainNode.gain.value = 0, 1000);
+            setTimeout(() => gainNode.gain.value = 0, 150);
+            setTimeout(() => gainNode.gain.value = 0.3, 300);
+            setTimeout(() => gainNode.gain.value = 0, 450);
             setTimeout(() => {
                 oscillator.stop();
                 audioContext.close();
-            }, 1200);
+            }, 600);
         } catch (e) {
             console.log('Audio notification failed:', e);
         }
 
-        // 브라우저 알림
         if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification('🍞 발효 완료!', {
-                body: '빵 발효가 완료되었습니다.',
-                icon: '🍞',
+            new Notification('🍞 ' + message, {
+                body: currentStage ? `${currentStage.name} 단계가 완료되었습니다!` : '발효가 완료되었습니다!',
             });
         }
-    }, []);
+    }, [currentStage]);
 
-    // 타이머 틱
+    // 타이머 로직
     useEffect(() => {
         if (status === 'running' && timeLeft > 0) {
             intervalRef.current = window.setInterval(() => {
                 setTimeLeft((prev) => {
                     if (prev <= 1) {
-                        setStatus('completed');
-                        playNotification();
+                        // 현재 단계 완료
+                        if (currentStageIndex < stages.length - 1) {
+                            setStatus('stageComplete');
+                            playNotification('단계 완료!');
+                        } else {
+                            setStatus('allComplete');
+                            playNotification('모든 발효 완료!');
+                        }
                         return 0;
                     }
                     return prev - 1;
@@ -102,19 +115,20 @@ export function useTimer(initialMinutes: number = 60): UseTimerReturn {
                 intervalRef.current = null;
             }
         };
-    }, [status, timeLeft, playNotification]);
+    }, [status, timeLeft, currentStageIndex, stages.length, playNotification]);
 
     const start = useCallback(() => {
-        if (status === 'idle' || status === 'completed') {
-            setTimeLeft(totalTime);
+        if (status === 'idle' || status === 'stageComplete') {
+            if (status === 'idle' && stages.length > 0) {
+                setTimeLeft(stages[0].durationMinutes * 60);
+            }
         }
         setStatus('running');
 
-        // 알림 권한 요청
         if ('Notification' in window && Notification.permission === 'default') {
             Notification.requestPermission();
         }
-    }, [status, totalTime]);
+    }, [status, stages]);
 
     const pause = useCallback(() => {
         if (status === 'running') {
@@ -128,30 +142,63 @@ export function useTimer(initialMinutes: number = 60): UseTimerReturn {
         }
     }, [status]);
 
-    const reset = useCallback(() => {
-        setStatus('idle');
-        setTimeLeft(totalTime);
-    }, [totalTime]);
+    const resetStage = useCallback(() => {
+        if (currentStage) {
+            setTimeLeft(currentStage.durationMinutes * 60);
+            setStatus('idle');
+        }
+    }, [currentStage]);
 
-    const setMinutes = useCallback((minutes: number) => {
-        const seconds = Math.max(1, minutes) * 60;
-        setTotalTime(seconds);
-        setTimeLeft(seconds);
+    const resetAll = useCallback(() => {
+        setCurrentStageIndex(0);
+        if (stages.length > 0) {
+            setTimeLeft(stages[0].durationMinutes * 60);
+        }
+        setStatus('idle');
+    }, [stages]);
+
+    const nextStage = useCallback(() => {
+        if (currentStageIndex < stages.length - 1) {
+            const nextIndex = currentStageIndex + 1;
+            setCurrentStageIndex(nextIndex);
+            setTimeLeft(stages[nextIndex].durationMinutes * 60);
+            setStatus('running');
+        }
+    }, [currentStageIndex, stages]);
+
+    const setStages = useCallback((newStages: FermentationStage[]) => {
+        setStagesState(newStages);
+        setCurrentStageIndex(0);
+        if (newStages.length > 0) {
+            setTimeLeft(newStages[0].durationMinutes * 60);
+        }
         setStatus('idle');
     }, []);
 
-    const progress = totalTime > 0 ? (totalTime - timeLeft) / totalTime : 0;
+    // 진행률 계산
+    const stageProgress = stageTime > 0 ? (stageTime - timeLeft) / stageTime : 0;
+
+    const totalTimeAll = stages.reduce((sum, s) => sum + s.durationMinutes * 60, 0);
+    const completedTime = stages.slice(0, currentStageIndex).reduce((sum, s) => sum + s.durationMinutes * 60, 0) + (stageTime - timeLeft);
+    const totalProgress = totalTimeAll > 0 ? completedTime / totalTimeAll : 0;
 
     return {
+        currentStageIndex,
+        currentStage,
         timeLeft,
-        totalTime,
+        stageTime,
         status,
-        progress,
+        stageProgress,
+        totalProgress,
+        completedStages: currentStageIndex,
+        totalStages: stages.length,
         start,
         pause,
         resume,
-        reset,
-        setMinutes,
+        resetStage,
+        resetAll,
+        nextStage,
+        setStages,
     };
 }
 

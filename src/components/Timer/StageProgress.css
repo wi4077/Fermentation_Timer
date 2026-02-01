@@ -1,0 +1,104 @@
+.stage-progress {
+    margin-bottom: var(--space-lg);
+}
+
+.stage-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-xs);
+}
+
+.stage-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-full);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    transition: all var(--transition-normal);
+    position: relative;
+}
+
+.stage-item.active {
+    background: rgba(212, 165, 116, 0.15);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 12px rgba(212, 165, 116, 0.3);
+}
+
+.stage-item.completed {
+    background: rgba(124, 179, 66, 0.15);
+    border-color: var(--color-success);
+}
+
+.stage-item.pending {
+    opacity: 0.5;
+}
+
+.stage-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 2px solid var(--glass-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.stage-item.active .stage-dot {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #1a1512;
+}
+
+.stage-item.completed .stage-dot {
+    background: var(--color-success);
+    border-color: var(--color-success);
+    color: white;
+}
+
+.stage-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.stage-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.stage-time {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+.stage-connector {
+    display: none;
+}
+
+/* 반응형 */
+@media (max-width: 480px) {
+    .stage-list {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-xs);
+    }
+
+    .stage-item {
+        justify-content: flex-start;
+    }
+
+    .stage-info {
+        flex-direction: row;
+        gap: var(--space-sm);
+        align-items: center;
+    }
+}

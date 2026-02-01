@@ -1,4 +1,4 @@
-import type { BreadPreset } from '../../data/presets';
+import { type BreadPreset, getTotalTime } from '../../data/presets';
 import './BreadSelector.css';
 
 interface BreadSelectorProps {
@@ -23,7 +23,7 @@ export function BreadSelector({ presets, selectedId, onSelect, disabled }: Bread
                     >
                         <span className="bread-emoji">{preset.emoji}</span>
                         <span className="bread-name">{preset.name}</span>
-                        <span className="bread-time">{preset.defaultTimeMinutes}분</span>
+                        <span className="bread-time">{getTotalTime(preset.stages)}분 · {preset.stages.length}단계</span>
                     </button>
                 ))}
             </div>

@@ -1,23 +1,26 @@
 import { formatTime } from '../../hooks/useTimer';
 import type { TimerStatus } from '../../hooks/useTimer';
+import type { FermentationStage } from '../../data/presets';
 import './TimerDisplay.css';
 
 interface TimerDisplayProps {
     timeLeft: number;
     progress: number;
     status: TimerStatus;
+    currentStage: FermentationStage | null;
 }
 
-export function TimerDisplay({ timeLeft, progress, status }: TimerDisplayProps) {
-    const circumference = 2 * Math.PI * 140; // 원 둘레 (반지름 140)
+export function TimerDisplay({ timeLeft, progress, status, currentStage }: TimerDisplayProps) {
+    const circumference = 2 * Math.PI * 140;
     const strokeDashoffset = circumference * (1 - progress);
 
     const getStatusText = () => {
         switch (status) {
-            case 'running': return '발효 중...';
+            case 'running': return currentStage?.description || '진행 중...';
             case 'paused': return '일시정지';
-            case 'completed': return '🎉 완료!';
-            default: return '준비';
+            case 'stageComplete': return '✅ 단계 완료!';
+            case 'allComplete': return '🎉 모든 발효 완료!';
+            default: return '시작하려면 버튼을 누르세요';
         }
     };
 
@@ -25,15 +28,22 @@ export function TimerDisplay({ timeLeft, progress, status }: TimerDisplayProps) 
         switch (status) {
             case 'running': return 'status-running';
             case 'paused': return 'status-paused';
-            case 'completed': return 'status-completed';
+            case 'stageComplete': return 'status-stage-complete';
+            case 'allComplete': return 'status-completed';
             default: return 'status-idle';
         }
     };
 
     return (
         <div className={`timer-display ${getStatusClass()}`}>
+            {currentStage && (
+                <div className="current-stage-badge">
+                    <span>{currentStage.emoji}</span>
+                    <span>{currentStage.name}</span>
+                </div>
+            )}
+
             <svg className="timer-ring" viewBox="0 0 320 320">
-                {/* 배경 원 */}
                 <circle
                     className="timer-ring-bg"
                     cx="160"
@@ -42,7 +52,6 @@ export function TimerDisplay({ timeLeft, progress, status }: TimerDisplayProps) 
                     fill="none"
                     strokeWidth="12"
                 />
-                {/* 진행 원 */}
                 <circle
                     className="timer-ring-progress"
                     cx="160"

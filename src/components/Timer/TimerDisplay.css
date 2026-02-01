@@ -5,7 +5,25 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto var(--space-xl);
+    margin: 0 auto var(--space-lg);
+}
+
+.current-stage-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-md);
+    background: var(--color-primary);
+    color: #1a1512;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+    z-index: 10;
 }
 
 .timer-ring {
@@ -24,13 +42,17 @@
     filter: drop-shadow(0 0 8px rgba(212, 165, 116, 0.4));
 }
 
-/* 상태별 색상 */
 .status-running .timer-ring-progress {
     stroke: var(--color-primary);
 }
 
 .status-paused .timer-ring-progress {
     stroke: var(--color-warning);
+}
+
+.status-stage-complete .timer-ring-progress {
+    stroke: var(--color-success);
+    animation: pulse-glow 1s ease-in-out infinite;
 }
 
 .status-completed .timer-ring-progress {
@@ -57,6 +79,8 @@
     flex-direction: column;
     align-items: center;
     gap: var(--space-xs);
+    text-align: center;
+    padding: 0 var(--space-md);
 }
 
 .timer-time {
@@ -69,22 +93,23 @@
 }
 
 .timer-status {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 500;
     color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    max-width: 180px;
+    line-height: 1.3;
 }
 
-.status-completed .timer-time {
+.status-completed .timer-time,
+.status-stage-complete .timer-time {
     color: var(--color-success);
 }
 
-.status-completed .timer-status {
+.status-completed .timer-status,
+.status-stage-complete .timer-status {
     color: var(--color-success);
 }
 
-/* 반응형 */
 @media (max-width: 480px) {
     .timer-display {
         width: 240px;
@@ -93,5 +118,15 @@
 
     .timer-time {
         font-size: 2.8rem;
+    }
+
+    .timer-status {
+        font-size: 0.75rem;
+        max-width: 150px;
+    }
+
+    .current-stage-badge {
+        font-size: 0.7rem;
+        top: -5px;
     }
 }

@@ -27,22 +27,33 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-sm);
+    gap: var(--space-md);
     margin-bottom: var(--space-lg);
-    padding: var(--space-sm) var(--space-lg);
+    padding: var(--space-md) var(--space-lg);
     background: rgba(212, 165, 116, 0.1);
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-lg);
 }
 
 .selected-emoji {
-    font-size: 1.5rem;
+    font-size: 2rem;
+}
+
+.selected-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .selected-name {
     font-family: var(--font-display);
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 600;
     color: var(--color-primary-light);
+}
+
+.selected-total {
+    font-size: 0.8rem;
+    color: var(--text-muted);
 }
 
 .app-footer {
@@ -63,5 +74,17 @@
 
     .app-subtitle {
         font-size: 0.85rem;
+    }
+
+    .selected-bread {
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    .selected-emoji {
+        font-size: 1.5rem;
+    }
+
+    .selected-name {
+        font-size: 1rem;
     }
 }
