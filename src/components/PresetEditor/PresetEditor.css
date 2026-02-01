@@ -34,7 +34,7 @@
 .input-text {
     width: 100%;
     padding: var(--space-md);
-    background: rgba(30, 25, 20, 0.9);
+    background: rgba(30, 25, 20, 0.85);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-md);
     color: var(--text-primary);
@@ -75,28 +75,45 @@
 }
 
 .btn-add-stage {
-    padding: var(--space-xs) var(--space-md);
-    background: rgba(124, 179, 66, 0.2);
+    padding: var(--space-sm) var(--space-lg);
+    background: linear-gradient(135deg, rgba(124, 179, 66, 0.3), rgba(124, 179, 66, 0.15));
     border: 1px solid var(--color-success);
     border-radius: var(--radius-full);
     color: var(--color-success);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     transition: all var(--transition-normal);
+    box-shadow: 0 2px 8px rgba(124, 179, 66, 0.2);
 }
 
 .btn-add-stage:hover {
-    background: rgba(124, 179, 66, 0.3);
+    background: linear-gradient(135deg, rgba(124, 179, 66, 0.4), rgba(124, 179, 66, 0.25));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(124, 179, 66, 0.3);
 }
 
 /* 단계 목록 */
 .stages-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
-    max-height: 300px;
+    gap: var(--space-md);
+    max-height: 320px;
     overflow-y: auto;
+    padding-right: var(--space-xs);
+}
+
+.stages-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.stages-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.stages-list::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 3px;
 }
 
 .stage-edit-item {
@@ -104,93 +121,122 @@
     flex-wrap: wrap;
     gap: var(--space-sm);
     align-items: center;
-    padding: var(--space-sm);
+    padding: var(--space-md);
     background: rgba(30, 25, 20, 0.6);
     border: 1px solid var(--glass-border);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
 }
 
 .stage-number {
-    width: 24px;
-    height: 24px;
-    min-width: 24px;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-primary);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
     color: #1a1512;
     border-radius: 50%;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 700;
+    box-shadow: 0 2px 6px rgba(212, 165, 116, 0.3);
 }
 
 .input-select {
     flex: 1;
-    min-width: 120px;
-    padding: var(--space-sm);
-    background: rgba(30, 25, 20, 0.95);
+    min-width: 140px;
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(30, 25, 20, 0.85);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--glass-border);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     color: var(--text-primary);
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-family: inherit;
     cursor: pointer;
+    transition: all var(--transition-normal);
 }
 
 .input-select option {
-    background: #2a2520;
+    background: rgba(42, 37, 32, 0.98);
     color: #f5f0eb;
-    padding: 8px;
+    padding: 12px;
+}
+
+.input-select:hover {
+    border-color: var(--color-primary);
 }
 
 .input-select:focus {
     outline: none;
     border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.2);
 }
 
 .time-input-group {
     display: flex;
     align-items: center;
-    gap: var(--space-xs);
+    gap: var(--space-sm);
+    background: rgba(30, 25, 20, 0.85);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-xs) var(--space-sm);
+    transition: all var(--transition-normal);
+}
+
+.time-input-group:hover {
+    border-color: var(--color-primary);
+}
+
+.time-input-group:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.2);
 }
 
 .input-number {
-    width: 60px;
+    width: 70px;
     padding: var(--space-sm);
-    background: rgba(30, 25, 20, 0.95);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-sm);
+    background: transparent;
+    border: none;
     color: var(--text-primary);
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-family: inherit;
+    font-weight: 600;
     text-align: center;
 }
 
 .input-number:focus {
     outline: none;
-    border-color: var(--color-primary);
 }
 
 .time-unit {
-    font-size: 0.8rem;
-    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    padding-right: var(--space-xs);
 }
 
 .input-description {
     flex: 1;
-    min-width: 100px;
-    padding: var(--space-sm);
-    background: rgba(30, 25, 20, 0.95);
+    min-width: 120px;
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(30, 25, 20, 0.85);
     border: 1px solid var(--glass-border);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     color: var(--text-primary);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-family: inherit;
+    transition: all var(--transition-normal);
+}
+
+.input-description:hover {
+    border-color: var(--color-primary);
 }
 
 .input-description:focus {
     outline: none;
     border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.2);
 }
 
 .input-description::placeholder {
@@ -198,23 +244,25 @@
 }
 
 .btn-remove-stage {
-    width: 28px;
-    height: 28px;
-    min-width: 28px;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(239, 83, 80, 0.2);
+    background: linear-gradient(135deg, rgba(239, 83, 80, 0.25), rgba(239, 83, 80, 0.1));
     border: 1px solid var(--color-danger);
     border-radius: 50%;
     color: var(--color-danger);
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: all var(--transition-normal);
 }
 
 .btn-remove-stage:hover:not(:disabled) {
-    background: rgba(239, 83, 80, 0.3);
+    background: linear-gradient(135deg, rgba(239, 83, 80, 0.4), rgba(239, 83, 80, 0.2));
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(239, 83, 80, 0.3);
 }
 
 .btn-remove-stage:disabled {
@@ -232,7 +280,8 @@
 }
 
 .editor-actions .btn {
-    min-width: 120px;
+    min-width: 130px;
+    padding: var(--space-md) var(--space-xl);
 }
 
 /* 반응형 - 작은 화면 */
@@ -253,7 +302,7 @@
 
     .time-input-group {
         width: 100%;
-        justify-content: flex-start;
+        justify-content: center;
     }
 
     .btn-remove-stage {
