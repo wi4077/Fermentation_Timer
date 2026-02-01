@@ -49,12 +49,9 @@
 
 /* 드롭다운 목록 - 플로팅 패널 */
 .custom-select-dropdown {
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    max-height: 400px;
+    /* position/top/left/width set via inline styles */
+    z-index: 9999;
+    max-height: 350px;
     overflow-y: auto;
     overflow-x: hidden;
     overscroll-behavior: contain;
