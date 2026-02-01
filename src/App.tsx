@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import { TimerDisplay, Controls } from './components/Timer';
+import { BreadSelector } from './components/BreadSelector';
+import { useTimer } from './hooks/useTimer';
+import { breadPresets, type BreadPreset } from './data/presets';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [selectedBread, setSelectedBread] = useState<BreadPreset>(breadPresets[0]);
+    const timer = useTimer(selectedBread.defaultTimeMinutes);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const handleBreadSelect = (preset: BreadPreset) => {
+        setSelectedBread(preset);
+        timer.setMinutes(preset.defaultTimeMinutes);
+    };
+
+    const isTimerActive = timer.status === 'running' || timer.status === 'paused';
+
+    return (
+        <div className="app animate-fadeIn">
+            <header className="app-header">
+                <h1 className="app-title">🍞 빵 발효 타이머</h1>
+                <p className="app-subtitle">완벽한 발효를 위한 당신의 파트너</p>
+            </header>
+
+            <main className="glass-card">
+                <div className="selected-bread">
+                    <span className="selected-emoji">{selectedBread.emoji}</span>
+                    <span className="selected-name">{selectedBread.name}</span>
+                </div>
+
+                <TimerDisplay
+                    timeLeft={timer.timeLeft}
+                    progress={timer.progress}
+                    status={timer.status}
+                />
+
+                <Controls
+                    status={timer.status}
+                    onStart={timer.start}
+                    onPause={timer.pause}
+                    onResume={timer.resume}
+                    onReset={timer.reset}
+                />
+
+                <BreadSelector
+                    presets={breadPresets}
+                    selectedId={selectedBread.id}
+                    onSelect={handleBreadSelect}
+                    disabled={isTimerActive}
+                />
+            </main>
+
+            <footer className="app-footer">
+                <p>발효 중엔 따뜻하고 습한 곳에 반죽을 두세요 🌡️</p>
+            </footer>
+        </div>
+    );
 }
 
-export default App
+export default App;
