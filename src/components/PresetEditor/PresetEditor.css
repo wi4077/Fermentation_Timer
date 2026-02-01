@@ -1,5 +1,7 @@
 .preset-editor {
     width: 100%;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .editor-header h2 {
@@ -32,13 +34,14 @@
 .input-text {
     width: 100%;
     padding: var(--space-md);
-    background: var(--glass-bg);
+    background: rgba(30, 25, 20, 0.9);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-md);
     color: var(--text-primary);
     font-size: 1rem;
     font-family: inherit;
     transition: border-color var(--transition-normal);
+    box-sizing: border-box;
 }
 
 .input-text:focus {
@@ -61,6 +64,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
 }
 
 .stages-header span {
@@ -90,15 +95,17 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .stage-edit-item {
-    display: grid;
-    grid-template-columns: 30px 1fr 100px 1fr 32px;
+    display: flex;
+    flex-wrap: wrap;
     gap: var(--space-sm);
     align-items: center;
     padding: var(--space-sm);
-    background: var(--glass-bg);
+    background: rgba(30, 25, 20, 0.6);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-md);
 }
@@ -106,6 +113,7 @@
 .stage-number {
     width: 24px;
     height: 24px;
+    min-width: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -117,14 +125,22 @@
 }
 
 .input-select {
+    flex: 1;
+    min-width: 120px;
     padding: var(--space-sm);
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(30, 25, 20, 0.95);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-sm);
     color: var(--text-primary);
     font-size: 0.85rem;
     font-family: inherit;
     cursor: pointer;
+}
+
+.input-select option {
+    background: #2a2520;
+    color: #f5f0eb;
+    padding: 8px;
 }
 
 .input-select:focus {
@@ -141,7 +157,7 @@
 .input-number {
     width: 60px;
     padding: var(--space-sm);
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(30, 25, 20, 0.95);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-sm);
     color: var(--text-primary);
@@ -161,8 +177,10 @@
 }
 
 .input-description {
+    flex: 1;
+    min-width: 100px;
     padding: var(--space-sm);
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(30, 25, 20, 0.95);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-sm);
     color: var(--text-primary);
@@ -182,6 +200,7 @@
 .btn-remove-stage {
     width: 28px;
     height: 28px;
+    min-width: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -209,37 +228,36 @@
     gap: var(--space-md);
     justify-content: center;
     margin-top: var(--space-lg);
+    flex-wrap: wrap;
 }
 
 .editor-actions .btn {
     min-width: 120px;
 }
 
-/* 반응형 */
-@media (max-width: 600px) {
+/* 반응형 - 작은 화면 */
+@media (max-width: 500px) {
     .stage-edit-item {
-        grid-template-columns: 24px 1fr 1fr 28px;
-        grid-template-rows: auto auto;
-        gap: var(--space-xs);
+        flex-direction: column;
+        align-items: stretch;
     }
 
     .stage-number {
-        grid-row: span 2;
+        align-self: flex-start;
     }
 
-    .input-select {
-        grid-column: 2;
+    .input-select,
+    .input-description {
+        width: 100%;
     }
 
     .time-input-group {
-        grid-column: 3;
-    }
-
-    .input-description {
-        grid-column: 2 / 4;
+        width: 100%;
+        justify-content: flex-start;
     }
 
     .btn-remove-stage {
-        grid-row: span 2;
+        align-self: flex-end;
+        margin-top: calc(-1 * var(--space-sm));
     }
 }
