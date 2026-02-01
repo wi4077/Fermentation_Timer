@@ -54,10 +54,13 @@
     left: 0;
     right: 0;
     z-index: 1000;
-    max-height: 220px;
+    max-height: 200px;
     overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scroll-behavior: smooth;
     margin: 0;
-    padding: var(--space-sm);
+    padding: var(--space-xs);
     background: linear-gradient(145deg, rgba(45, 40, 35, 0.98), rgba(35, 30, 25, 0.98));
     backdrop-filter: blur(20px);
     border: 1px solid var(--color-primary);
@@ -67,33 +70,39 @@
         0 0 0 1px rgba(212, 165, 116, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
     list-style: none;
-    animation: floatIn 0.2s ease-out;
+    animation: floatIn 0.15s ease-out;
 }
 
 @keyframes floatIn {
     from {
         opacity: 0;
-        transform: translateY(-4px) scale(0.98);
+        transform: translateY(-4px);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
     }
 }
 
+/* 스크롤바 스타일 */
 .custom-select-dropdown::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
 }
 
 .custom-select-dropdown::-webkit-scrollbar-track {
-    background: transparent;
-    margin: var(--space-sm);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+    margin: 4px;
 }
 
 .custom-select-dropdown::-webkit-scrollbar-thumb {
-    background: var(--color-primary-dark);
+    background: var(--color-primary);
     border-radius: 3px;
+}
+
+.custom-select-dropdown::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-light);
 }
 
 /* 옵션 */
@@ -101,16 +110,11 @@
     display: flex;
     align-items: center;
     gap: var(--space-sm);
-    padding: var(--space-sm) var(--space-md);
+    padding: 10px var(--space-md);
     color: var(--text-primary);
     cursor: pointer;
     transition: all var(--transition-fast);
     border-radius: var(--radius-sm);
-    margin-bottom: 2px;
-}
-
-.custom-select-option:last-child {
-    margin-bottom: 0;
 }
 
 .custom-select-option:hover {
@@ -125,13 +129,18 @@
 .option-emoji {
     font-size: 1.1rem;
     line-height: 1;
+    flex-shrink: 0;
 }
 
 .option-label {
     flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .option-check {
     color: var(--color-primary);
     font-weight: 700;
+    flex-shrink: 0;
 }

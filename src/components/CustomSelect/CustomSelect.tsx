@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import './CustomSelect.css';
 
 interface Option {
@@ -17,8 +17,10 @@ interface CustomSelectProps {
 export function CustomSelect({ options, value, onChange, className = '' }: CustomSelectProps) {
     const [isOpen, setIsOpen] = useState(false);
     const selectRef = useRef<HTMLDivElement>(null);
+    const dropdownRef = useRef<HTMLUListElement>(null);
 
     const selectedOption = options.find(opt => opt.value === value);
+    const selectedIndex = options.findIndex(opt => opt.value === value);
 
     // 외부 클릭 시 닫기
     useEffect(() => {
@@ -30,6 +32,31 @@ export function CustomSelect({ options, value, onChange, className = '' }: Custo
 
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    // 드롭다운 열릴 때 선택된 항목으로 스크롤
+    useEffect(() => {
+        if (isOpen && dropdownRef.current && selectedIndex >= 0) {
+            const optionHeight = 40; // 대략적인 옵션 높이
+            dropdownRef.current.scrollTop = Math.max(0, (selectedIndex - 2) * optionHeight);
+        }
+    }, [isOpen, selectedIndex]);
+
+    // 스크롤 이벤트가 부모로 전파되지 않도록
+    const handleWheel = useCallback((e: React.WheelEvent) => {
+        const dropdown = dropdownRef.current;
+        if (!dropdown) return;
+
+        const { scrollTop, scrollHeight, clientHeight } = dropdown;
+        const isScrollingUp = e.deltaY < 0;
+        const isScrollingDown = e.deltaY > 0;
+
+        // 스크롤 끝에 도달했을 때만 전파 방지
+        if ((isScrollingUp && scrollTop <= 0) ||
+            (isScrollingDown && scrollTop + clientHeight >= scrollHeight)) {
+            e.preventDefault();
+        }
+        e.stopPropagation();
     }, []);
 
     const handleSelect = (optionValue: string) => {
@@ -54,7 +81,12 @@ export function CustomSelect({ options, value, onChange, className = '' }: Custo
             </button>
 
             {isOpen && (
-                <ul className="custom-select-dropdown" role="listbox">
+                <ul
+                    className="custom-select-dropdown"
+                    role="listbox"
+                    ref={dropdownRef}
+                    onWheel={handleWheel}
+                >
                     {options.map((option) => (
                         <li
                             key={option.value}
