@@ -29,8 +29,6 @@
 .custom-select.open .custom-select-trigger {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.2);
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
 }
 
 .custom-select-value {
@@ -49,36 +47,38 @@
     transform: rotate(180deg);
 }
 
-/* 드롭다운 목록 */
+/* 드롭다운 목록 - 플로팅 패널 */
 .custom-select-dropdown {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 6px);
     left: 0;
     right: 0;
-    z-index: 100;
-    max-height: 250px;
+    z-index: 1000;
+    max-height: 220px;
     overflow-y: auto;
     margin: 0;
-    padding: var(--space-xs) 0;
-    background: rgba(35, 30, 25, 0.98);
-    backdrop-filter: blur(16px);
+    padding: var(--space-sm);
+    background: linear-gradient(145deg, rgba(45, 40, 35, 0.98), rgba(35, 30, 25, 0.98));
+    backdrop-filter: blur(20px);
     border: 1px solid var(--color-primary);
-    border-top: none;
-    border-radius: 0 0 var(--radius-md) var(--radius-md);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    border-radius: var(--radius-md);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(212, 165, 116, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
     list-style: none;
-    animation: slideDown 0.2s ease-out;
+    animation: floatIn 0.2s ease-out;
 }
 
-@keyframes slideDown {
+@keyframes floatIn {
     from {
         opacity: 0;
-        transform: translateY(-8px);
+        transform: translateY(-4px) scale(0.98);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
@@ -88,10 +88,11 @@
 
 .custom-select-dropdown::-webkit-scrollbar-track {
     background: transparent;
+    margin: var(--space-sm);
 }
 
 .custom-select-dropdown::-webkit-scrollbar-thumb {
-    background: var(--glass-border);
+    background: var(--color-primary-dark);
     border-radius: 3px;
 }
 
@@ -104,6 +105,12 @@
     color: var(--text-primary);
     cursor: pointer;
     transition: all var(--transition-fast);
+    border-radius: var(--radius-sm);
+    margin-bottom: 2px;
+}
+
+.custom-select-option:last-child {
+    margin-bottom: 0;
 }
 
 .custom-select-option:hover {
@@ -111,7 +118,7 @@
 }
 
 .custom-select-option.selected {
-    background: rgba(212, 165, 116, 0.2);
+    background: linear-gradient(135deg, rgba(212, 165, 116, 0.25), rgba(212, 165, 116, 0.15));
     color: var(--color-primary-light);
 }
 
