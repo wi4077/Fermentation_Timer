@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { stageInfo, createEmptyStage, type FermentationStage, type BreadPreset, type StageType } from '../../data/presets';
+import { CustomSelect } from '../CustomSelect';
 import './PresetEditor.css';
 
 interface PresetEditorProps {
@@ -99,17 +100,15 @@ export function PresetEditor({ onSave, onCancel, initialPreset }: PresetEditorPr
                             <div key={index} className="stage-edit-item">
                                 <span className="stage-number">{index + 1}</span>
 
-                                <select
+                                <CustomSelect
                                     value={stage.id}
-                                    onChange={(e) => updateStage(index, 'id', e.target.value)}
-                                    className="input-select"
-                                >
-                                    {stageTypes.map((type) => (
-                                        <option key={type} value={type}>
-                                            {stageInfo[type].emoji} {stageInfo[type].name}
-                                        </option>
-                                    ))}
-                                </select>
+                                    onChange={(value) => updateStage(index, 'id', value)}
+                                    options={stageTypes.map((type) => ({
+                                        value: type,
+                                        label: stageInfo[type].name,
+                                        emoji: stageInfo[type].emoji,
+                                    }))}
+                                />
 
                                 <div className="time-input-group">
                                     <button
