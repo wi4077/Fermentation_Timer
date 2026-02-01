@@ -216,6 +216,32 @@
     padding-right: var(--space-xs);
 }
 
+.btn-spinner {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    border: none;
+    border-radius: var(--radius-sm);
+    color: #1a1512;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    box-shadow: 0 2px 4px rgba(212, 165, 116, 0.2);
+}
+
+.btn-spinner:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(212, 165, 116, 0.3);
+}
+
+.btn-spinner:active {
+    transform: scale(0.95);
+}
+
 .input-description {
     flex: 1;
     min-width: 120px;

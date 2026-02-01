@@ -112,6 +112,14 @@ export function PresetEditor({ onSave, onCancel, initialPreset }: PresetEditorPr
                                 </select>
 
                                 <div className="time-input-group">
+                                    <button
+                                        type="button"
+                                        className="btn-spinner"
+                                        onClick={() => updateStage(index, 'durationMinutes', Math.max(1, stage.durationMinutes - 5))}
+                                        aria-label="5분 감소"
+                                    >
+                                        −
+                                    </button>
                                     <input
                                         type="number"
                                         min="1"
@@ -119,6 +127,14 @@ export function PresetEditor({ onSave, onCancel, initialPreset }: PresetEditorPr
                                         onChange={(e) => updateStage(index, 'durationMinutes', parseInt(e.target.value) || 1)}
                                         className="input-number"
                                     />
+                                    <button
+                                        type="button"
+                                        className="btn-spinner"
+                                        onClick={() => updateStage(index, 'durationMinutes', stage.durationMinutes + 5)}
+                                        aria-label="5분 증가"
+                                    >
+                                        +
+                                    </button>
                                     <span className="time-unit">분</span>
                                 </div>
 
