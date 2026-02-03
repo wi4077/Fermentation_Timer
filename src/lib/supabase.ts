@@ -1,13 +1,23 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// 공개 키이므로 하드코딩 가능 (anon key는 클라이언트 사이드에서 사용하도록 설계됨)
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://txpaboakemooqokzhdte.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cGFib2FrZW1vb3Fva3poZHRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxMTEyMTcsImV4cCI6MjA4NTY4NzIxN30.7Co6xqojggzjGEnW65tnpVF0V7PWw3PRmRciN4vMCP8';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Supabase 클라이언트 (환경변수 있을 때만 생성)
+export const supabase: SupabaseClient | null =
+    supabaseUrl && supabaseAnonKey
+        ? createClient(supabaseUrl, supabaseAnonKey)
+        : null;
+
+export const isSupabaseConfigured = (): boolean => supabase !== null;
 
 // 푸시 알림 구독 저장
 export async function savePushSubscription(subscription: PushSubscription) {
+    if (!supabase) {
+        console.warn('Supabase not configured');
+        return null;
+    }
+
     const { data, error } = await supabase
         .from('push_subscriptions')
         .upsert({
@@ -31,6 +41,11 @@ export async function saveTimerSchedule(
     scheduledTime: Date,
     message: string
 ) {
+    if (!supabase) {
+        console.warn('Supabase not configured');
+        return null;
+    }
+
     const { data, error } = await supabase
         .from('timer_schedules')
         .insert({
@@ -49,6 +64,11 @@ export async function saveTimerSchedule(
 
 // 기존 타이머 스케줄 삭제 (리셋 시)
 export async function deleteTimerSchedules(subscriptionEndpoint: string) {
+    if (!supabase) {
+        console.warn('Supabase not configured');
+        return;
+    }
+
     const { error } = await supabase
         .from('timer_schedules')
         .delete()
@@ -62,6 +82,11 @@ export async function deleteTimerSchedules(subscriptionEndpoint: string) {
 
 // Edge Function을 통해 즉시 푸시 알림 전송
 export async function sendPushNow(subscription: PushSubscription, message: string) {
+    if (!supabase) {
+        console.warn('Supabase not configured');
+        return null;
+    }
+
     const { data, error } = await supabase.functions.invoke('send-push', {
         body: {
             subscription: subscription.toJSON(),
@@ -75,3 +100,4 @@ export async function sendPushNow(subscription: PushSubscription, message: strin
     }
     return data;
 }
+

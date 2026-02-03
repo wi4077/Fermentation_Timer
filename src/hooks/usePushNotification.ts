@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { savePushSubscription, saveTimerSchedule, deleteTimerSchedules } from '../lib/supabase';
 
-// VAPID 공개 키 (공개 키이므로 하드코딩 가능)
-const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY || 'BGNw-45krkMWwP8CAwpchBvdO1uTU03hJYJRIFzQcOGpUrpyQj23mEUUmqjFGcMUN1NdtHcuOMhkk7DT3CVeFlI';
+// VAPID 공개 키 (GitHub Secrets에서 주입)
+const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY || '';
 
 interface UsePushNotificationReturn {
     isSupported: boolean;
