@@ -21,11 +21,27 @@ self.addEventListener('push', function (event) {
 self.addEventListener('notificationclick', function (event) {
     event.notification.close();
 
-    if (event.action === 'open' || !event.action) {
-        event.waitUntil(
-            clients.openWindow('/Fermentation_Timer/')
-        );
+    if (event.action === 'dismiss') {
+        return;
     }
+
+    // 앱 열기 또는 기존 창으로 포커스
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true })
+            .then(function (clientList) {
+                // 이미 열린 창이 있으면 포커스
+                for (var i = 0; i < clientList.length; i++) {
+                    var client = clientList[i];
+                    if (client.url.includes('/Fermentation_Timer/') && 'focus' in client) {
+                        return client.focus();
+                    }
+                }
+                // 없으면 새 창 열기
+                if (clients.openWindow) {
+                    return clients.openWindow('/Fermentation_Timer/');
+                }
+            })
+    );
 });
 
 // Install event

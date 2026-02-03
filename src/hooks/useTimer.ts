@@ -118,9 +118,18 @@ export function useMultiStageTimer(initialStages: FermentationStage[] = []): Use
         }
 
         if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification('🍞 ' + message, {
+            const notification = new Notification('🍞 ' + message, {
                 body: currentStage ? `${currentStage.name} 단계가 완료되었습니다!` : '발효가 완료되었습니다!',
+                icon: '/Fermentation_Timer/PhotoshopExtension_Image-Photoroom.png',
+                tag: 'fermentation-timer',
+                requireInteraction: true, // 사용자가 닫을 때까지 유지
             });
+
+            // 알림 클릭 시 앱으로 이동
+            notification.onclick = () => {
+                window.focus();
+                notification.close();
+            };
         }
     }, [currentStage]);
 
