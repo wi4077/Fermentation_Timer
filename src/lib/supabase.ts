@@ -1,11 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('Missing Supabase environment variables');
-}
+// 공개 키이므로 하드코딩 가능 (anon key는 클라이언트 사이드에서 사용하도록 설계됨)
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://txpaboakemooqokzhdte.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cGFib2FrZW1vb3Fva3poZHRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxMTEyMTcsImV4cCI6MjA4NTY4NzIxN30.7Co6xqojggzjGEnW65tnpVF0V7PWw3PRmRciN4vMCP8';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
