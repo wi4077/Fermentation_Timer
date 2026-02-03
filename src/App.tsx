@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { TimerDisplay, Controls, StageProgress } from './components/Timer';
 import { BreadSelector } from './components/BreadSelector';
 import { PresetEditor } from './components/PresetEditor';
 import { useMultiStageTimer } from './hooks/useTimer';
 import { useCustomPresets } from './hooks/useCustomPresets';
+import { usePushNotification } from './hooks/usePushNotification';
 import { defaultPresets, getTotalTime, type BreadPreset } from './data/presets';
 import logoImage from '/PhotoshopExtension_Image-Photoroom.png';
 import './App.css';
@@ -15,12 +16,43 @@ function App() {
     const [selectedBread, setSelectedBread] = useState<BreadPreset>(defaultPresets[0]);
     const timer = useMultiStageTimer(selectedBread.stages);
     const { customPresets, savePreset, deletePreset } = useCustomPresets();
+    const pushNotification = usePushNotification();
 
     // 빵 선택 시 타이머 단계 업데이트
     useEffect(() => {
         timer.setStages(selectedBread.stages);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedBread]);
+
+    // 타이머 시작 시 푸시 알림 스케줄 저장
+    const handleStart = useCallback(async () => {
+        timer.start();
+
+        // 푸시 알림 구독되어 있으면 스케줄 저장
+        if (pushNotification.isSubscribed) {
+            try {
+                // 현재 단계부터 남은 모든 단계의 알림 스케줄
+                let accumulatedTime = 0;
+                for (let i = timer.currentStageIndex; i < selectedBread.stages.length; i++) {
+                    accumulatedTime += selectedBread.stages[i].durationMinutes * 60;
+                    const message = i < selectedBread.stages.length - 1
+                        ? `${selectedBread.stages[i].name} 단계 완료!`
+                        : `${selectedBread.name} 발효 완료! 🎉`;
+                    await pushNotification.scheduleNotification(accumulatedTime, message);
+                }
+            } catch (error) {
+                console.error('Failed to schedule notifications:', error);
+            }
+        }
+    }, [timer, pushNotification, selectedBread]);
+
+    // 타이머 리셋 시 스케줄 삭제
+    const handleResetAll = useCallback(async () => {
+        timer.resetAll();
+        if (pushNotification.isSubscribed) {
+            await pushNotification.cancelScheduledNotifications();
+        }
+    }, [timer, pushNotification]);
 
     const handleBreadSelect = (preset: BreadPreset) => {
         setSelectedBread(preset);
@@ -66,6 +98,21 @@ function App() {
             <main className="glass-card">
                 {mode === 'timer' ? (
                     <>
+                        {/* 푸시 알림 구독 버튼 */}
+                        {pushNotification.isSupported && !pushNotification.isSubscribed && (
+                            <button
+                                className="push-subscribe-btn"
+                                onClick={pushNotification.subscribe}
+                            >
+                                🔔 알림 받기 (백그라운드에서도!)
+                            </button>
+                        )}
+                        {pushNotification.isSubscribed && (
+                            <div className="push-status">
+                                ✅ 백그라운드 알림 활성화됨
+                            </div>
+                        )}
+
                         <div className="selected-bread">
                             <span className="selected-emoji">{selectedBread.emoji}</span>
                             <div className="selected-info">
@@ -89,11 +136,11 @@ function App() {
 
                         <Controls
                             status={timer.status}
-                            onStart={timer.start}
+                            onStart={handleStart}
                             onPause={timer.pause}
                             onResume={timer.resume}
                             onResetStage={timer.resetStage}
-                            onResetAll={timer.resetAll}
+                            onResetAll={handleResetAll}
                             onNextStage={timer.nextStage}
                             hasNextStage={timer.currentStageIndex < timer.totalStages - 1}
                         />

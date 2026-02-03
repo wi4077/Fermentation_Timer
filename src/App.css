@@ -104,3 +104,34 @@
         font-size: 1rem;
     }
 }
+
+/* 푸시 알림 스타일 */
+.push-subscribe-btn {
+    width: 100%;
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    border: none;
+    border-radius: var(--radius-md);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.push-subscribe-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 165, 116, 0.4);
+}
+
+.push-status {
+    text-align: center;
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-lg);
+    background: rgba(72, 187, 120, 0.15);
+    border: 1px solid rgba(72, 187, 120, 0.3);
+    border-radius: var(--radius-md);
+    color: #48bb78;
+    font-size: 0.9rem;
+}
