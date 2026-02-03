@@ -1,0 +1,19 @@
+{
+    "name": "빵 발효 타이머",
+    "short_name": "발효타이머",
+    "description": "빵 반죽의 발효 과정을 단계별로 관리하는 앱",
+    "start_url": "/Fermentation_Timer/",
+    "scope": "/Fermentation_Timer/",
+    "display": "standalone",
+    "background_color": "#1a1412",
+    "theme_color": "#8B4513",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/Fermentation_Timer/Fermentation.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
