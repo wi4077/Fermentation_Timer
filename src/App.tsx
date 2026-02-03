@@ -5,6 +5,7 @@ import { PresetEditor } from './components/PresetEditor';
 import { useMultiStageTimer } from './hooks/useTimer';
 import { useCustomPresets } from './hooks/useCustomPresets';
 import { defaultPresets, getTotalTime, type BreadPreset } from './data/presets';
+import logoImage from '/PhotoshopExtension_Image-Photoroom.png';
 import './App.css';
 
 type AppMode = 'timer' | 'editor';
@@ -56,7 +57,7 @@ function App() {
         <div className="app animate-fadeIn">
             <header className="app-header">
                 <div className="title-wrapper">
-                    <img src="/PhotoshopExtension_Image-Photoroom.png" alt="Logo" className="app-logo" />
+                    <img src={logoImage} alt="Logo" className="app-logo" />
                     <h1 className="app-title">빵 발효 타이머</h1>
                 </div>
                 <p className="app-subtitle">완벽한 발효를 위한 당신의 파트너</p>
