@@ -59,24 +59,60 @@ export function useMultiStageTimer(initialStages: FermentationStage[] = []): Use
     const playNotification = useCallback((message: string) => {
         try {
             const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
-
-            oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
+            gainNode.gain.value = 0.4;
 
-            oscillator.frequency.value = 880;
-            oscillator.type = 'sine';
-            gainNode.gain.value = 0.3;
+            // 멜로디 음표 (도-미-솔-도 상승 패턴)
+            const notes = [523, 659, 784, 1047]; // C5, E5, G5, C6
+            const noteDuration = 180; // ms
+            const noteGap = 50; // ms
 
-            oscillator.start();
-            setTimeout(() => gainNode.gain.value = 0, 150);
-            setTimeout(() => gainNode.gain.value = 0.3, 300);
-            setTimeout(() => gainNode.gain.value = 0, 450);
+            notes.forEach((freq, index) => {
+                const oscillator = audioContext.createOscillator();
+                const noteGain = audioContext.createGain();
+
+                oscillator.connect(noteGain);
+                noteGain.connect(gainNode);
+
+                oscillator.frequency.value = freq;
+                oscillator.type = 'sine';
+
+                const startTime = audioContext.currentTime + (index * (noteDuration + noteGap)) / 1000;
+                const endTime = startTime + noteDuration / 1000;
+
+                noteGain.gain.setValueAtTime(0.5, startTime);
+                noteGain.gain.exponentialRampToValueAtTime(0.01, endTime);
+
+                oscillator.start(startTime);
+                oscillator.stop(endTime);
+            });
+
+            // 두 번째 멜로디 (1초 후 반복)
             setTimeout(() => {
-                oscillator.stop();
-                audioContext.close();
-            }, 600);
+                notes.forEach((freq, index) => {
+                    const oscillator = audioContext.createOscillator();
+                    const noteGain = audioContext.createGain();
+
+                    oscillator.connect(noteGain);
+                    noteGain.connect(gainNode);
+
+                    oscillator.frequency.value = freq;
+                    oscillator.type = 'sine';
+
+                    const startTime = audioContext.currentTime + (index * (noteDuration + noteGap)) / 1000;
+                    const endTime = startTime + noteDuration / 1000;
+
+                    noteGain.gain.setValueAtTime(0.5, startTime);
+                    noteGain.gain.exponentialRampToValueAtTime(0.01, endTime);
+
+                    oscillator.start(startTime);
+                    oscillator.stop(endTime);
+                });
+            }, 1200);
+
+            // AudioContext 정리
+            setTimeout(() => audioContext.close(), 3000);
         } catch (e) {
             console.log('Audio notification failed:', e);
         }
