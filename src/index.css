@@ -1,48 +1,53 @@
+/* ===== Google Fonts 로드 ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
 :root {
-    /* ===== 색상 팔레트 - 따뜻한 빵/베이커리 테마 ===== */
-    --color-primary: #D4A574;
-    --color-primary-dark: #B8956A;
-    --color-primary-light: #E8C9A8;
+    /* ===== 색상 팔레트 - 모던 슬레이트 & 앰버 테마 ===== */
+    --color-primary: #FFB347;
+    /* 밝은 앰버 */
+    --color-primary-dark: #E69A32;
+    --color-primary-light: #FFC97A;
 
-    --color-accent: #8B5A2B;
-    --color-accent-light: #A67B5B;
+    --color-accent: #FF6B6B;
+    --color-accent-light: #FF8E8E;
 
-    --color-success: #7CB342;
-    --color-warning: #FFB74D;
-    --color-danger: #EF5350;
+    --color-success: #10B981;
+    /* 모던 그린 */
+    --color-warning: #F59E0B;
+    --color-danger: #EF4444;
 
-    /* 배경 그라디언트 */
-    --bg-gradient-start: #1a1512;
-    --bg-gradient-mid: #2d2319;
-    --bg-gradient-end: #1a1512;
+    /* 배경 그라디언트 - 깊은 슬레이트 */
+    --bg-gradient-start: #0F172A;
+    --bg-gradient-mid: #1E293B;
+    --bg-gradient-end: #020617;
 
-    /* 글래스모피즘 */
-    --glass-bg: rgba(255, 255, 255, 0.08);
-    --glass-border: rgba(255, 255, 255, 0.12);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    /* 프리미엄 글래스모피즘 */
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
 
     /* 텍스트 색상 */
-    --text-primary: #FDFCFB;
-    --text-secondary: rgba(253, 252, 251, 0.7);
-    --text-muted: rgba(253, 252, 251, 0.5);
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
 
     /* ===== 타이포그래피 ===== */
     --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-    /* ===== 간격 ===== */
-    --space-xs: 0.25rem;
-    --space-sm: 0.5rem;
-    --space-md: 1rem;
-    --space-lg: 1.5rem;
-    --space-xl: 2rem;
-    --space-2xl: 3rem;
+    /* ===== 간격 (Slender) ===== */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 20px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
 
-    /* ===== 둥근 모서리 ===== */
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 20px;
-    --radius-xl: 28px;
+    /* ===== 둥근 모서리 (Less puffy) ===== */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
     --radius-full: 9999px;
 
     /* ===== 트랜지션 ===== */
@@ -50,9 +55,6 @@
     --transition-normal: 0.25s ease;
     --transition-slow: 0.4s ease;
 }
-
-/* ===== Google Fonts 로드 ===== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
 
 /* ===== 리셋 & 기본 스타일 ===== */
 *,
@@ -93,12 +95,12 @@ body {
 /* ===== 글래스 카드 ===== */
 .glass-card {
     background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-xl);
     box-shadow: var(--glass-shadow);
-    padding: var(--space-xl);
+    padding: var(--space-lg) var(--space-md);
     width: 100%;
     max-width: 100%;
 }
@@ -109,7 +111,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: var(--space-sm);
-    padding: var(--space-md) var(--space-lg);
+    padding: 10px 20px;
     font-family: var(--font-body);
     font-size: 1rem;
     font-weight: 600;
@@ -126,12 +128,13 @@ body {
 
 .btn-primary {
     background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-    color: #1a1512;
-    box-shadow: 0 4px 16px rgba(212, 165, 116, 0.3);
+    color: #0F172A;
+    /* Deep slate base */
+    box-shadow: 0 4px 16px rgba(255, 179, 71, 0.3);
 }
 
 .btn-primary:hover {
-    box-shadow: 0 6px 24px rgba(212, 165, 116, 0.4);
+    box-shadow: 0 6px 24px rgba(255, 179, 71, 0.5);
     transform: translateY(-2px);
 }
 
@@ -142,7 +145,7 @@ body {
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .btn-icon {
@@ -251,6 +254,7 @@ body {
 /* ===== 숫자 입력 스피너 스타일 ===== */
 input[type="number"] {
     -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 input[type="number"]::-webkit-outer-spin-button,

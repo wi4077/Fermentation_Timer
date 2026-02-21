@@ -76,7 +76,7 @@
 
 .btn-add-stage {
     padding: var(--space-sm) var(--space-lg);
-    background: linear-gradient(135deg, rgba(124, 179, 66, 0.3), rgba(124, 179, 66, 0.15));
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
     border: 1px solid var(--color-success);
     border-radius: var(--radius-full);
     color: var(--color-success);
@@ -84,13 +84,13 @@
     font-weight: 600;
     cursor: pointer;
     transition: all var(--transition-normal);
-    box-shadow: 0 2px 8px rgba(124, 179, 66, 0.2);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
 }
 
 .btn-add-stage:hover {
-    background: linear-gradient(135deg, rgba(124, 179, 66, 0.4), rgba(124, 179, 66, 0.25));
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(16, 185, 129, 0.15));
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(124, 179, 66, 0.3);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 /* 단계 목록 */
@@ -135,11 +135,11 @@
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-    color: #1a1512;
+    color: #0F172A;
     border-radius: 50%;
     font-size: 0.8rem;
     font-weight: 700;
-    box-shadow: 0 2px 6px rgba(212, 165, 116, 0.3);
+    box-shadow: 0 2px 6px rgba(255, 179, 71, 0.3);
 }
 
 .input-select {
@@ -170,7 +170,7 @@
 .input-select:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.2);
+    box-shadow: 0 0 0 2px rgba(255, 179, 71, 0.2);
 }
 
 .time-input-group {
@@ -190,7 +190,7 @@
 
 .time-input-group:focus-within {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.2);
+    box-shadow: 0 0 0 2px rgba(255, 179, 71, 0.2);
 }
 
 .input-number {
@@ -225,17 +225,17 @@
     background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
     border: none;
     border-radius: var(--radius-sm);
-    color: #1a1512;
+    color: #0F172A;
     font-size: 1.2rem;
     font-weight: 700;
     cursor: pointer;
     transition: all var(--transition-normal);
-    box-shadow: 0 2px 4px rgba(212, 165, 116, 0.2);
+    box-shadow: 0 2px 4px rgba(255, 179, 71, 0.2);
 }
 
 .btn-spinner:hover {
     transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(212, 165, 116, 0.3);
+    box-shadow: 0 4px 8px rgba(255, 179, 71, 0.3);
 }
 
 .btn-spinner:active {
@@ -262,7 +262,7 @@
 .input-description:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.2);
+    box-shadow: 0 0 0 2px rgba(255, 179, 71, 0.2);
 }
 
 .input-description::placeholder {
@@ -276,7 +276,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(239, 83, 80, 0.25), rgba(239, 83, 80, 0.1));
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
     border: 1px solid var(--color-danger);
     border-radius: 50%;
     color: var(--color-danger);
@@ -286,9 +286,9 @@
 }
 
 .btn-remove-stage:hover:not(:disabled) {
-    background: linear-gradient(135deg, rgba(239, 83, 80, 0.4), rgba(239, 83, 80, 0.2));
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(239, 68, 68, 0.1));
     transform: scale(1.1);
-    box-shadow: 0 2px 8px rgba(239, 83, 80, 0.3);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
 }
 
 .btn-remove-stage:disabled {
